@@ -1,0 +1,163 @@
+// ABID Ismail
+// sol_tp_1.sql
+
+
+/*  1ere question */
+
+SET SERVEROUTPUT ON;
+DECLARE
+v_nom VARCHAR2(50);
+v_prenom VARCHAR2(50);
+
+BEGIN
+	v_nom := '&v_nom';
+	v_prenom := '&v_prenom';
+	DBMS_OUTPUT.PUT_LINE('msg ' || v_nom || ' ' || v_prenom);
+END;
+
+
+/*  2eme question */
+
+
+SET SERVEROUTPUT ON;
+DECLARE
+    nbrtot INTEGER;
+BEGIN
+    SELECT COUNT (*) INTO nbrtot
+    FROM EMPLOYEES;
+    dbms_output.put_line(nbrtot);
+END;
+
+
+/*  3eme question  */
+
+SET SERVEROUTPUT ON;
+DECLARE
+    nbrmanagid INTEGER;
+BEGIN
+    SELECT COUNT (*) INTO nbrmanagid FROM EMPLOYEES WHERE MANAGER_ID = 1;
+    dbms_output.put_line(nbrmanagid);
+END;
+
+
+/*  4eme question  */
+
+SET SERVEROUTPUT ON;
+DECLARE
+	nbrtot INTEGER;
+    nbrmanagid INTEGER;
+    prop INTEGER;
+BEGIN
+	SELECT COUNT (*) INTO nbrtot FROM EMPLOYEES;
+    SELECT count (*) INTO nbrmanagid FROM EMPLOYEES WHERE MANAGER_ID = 1;
+    prop := (nbrmanagid/nbrtot)*100;
+    dbms_output.put_line(prop);
+END;
+
+/*  5eme question  */
+
+SET SERVEROUTPUT ON;
+DECLARE
+	v_last_name VARCHAR2(50);
+    v_first_name VARCHAR2(50);
+    v_hire_date DATE;
+    v_id INTEGER;
+BEGIN
+    v_id := '&v_id';
+    SELECT LAST_NAME, FIRST_NAME, HIRE_DATE
+    INTO v_last_name, v_first_name, v_hire_date
+    FROM EMPLOYEES
+    WHERE EMPLOYEE_ID=v_id;
+    dbms_output.put_line(v_last_name);
+    dbms_output.put_line(v_first_name);
+    dbms_output.put_line(v_hire_date);
+END;
+
+
+/* 6eme question  */
+
+DECLARE
+TYPE EMPLOYEE_REC
+IS
+RECORD
+( employee_id NUMBER,
+last_name EMPLOYEES.LAST_NAME%type,
+first_name EMPLOYEES.FIRST_NAME%type,
+hire_date EMPLOYEES.HIRE_DATE%type );
+EMP EMPLOYEE_REC;
+BEGIN
+EMP.employee_id := &vid;
+    SELECT LAST_NAME INTO EMP.last_name
+    FROM EMPLOYEES
+    WHERE EMPLOYEE_ID = EMP.employee_id;
+     SELECT FIRST_NAME INTO EMP.first_name
+    FROM EMPLOYEES
+    WHERE EMPLOYEE_ID = EMP.employee_id;
+     SELECT HIRE_DATE INTO EMP.hire_date
+    FROM EMPLOYEES
+    WHERE EMPLOYEE_ID = EMP.employee_id;
+    dbms_output.put_line('LAST NAME  : ' || EMP.last_name);
+    dbms_output.put_line('FIRST NAME : ' || EMP.first_name);
+    dbms_output.put_line('HIRE DATE  : ' || EMP.hire_date);
+END;
+
+
+/* 7eme question  */
+
+SET SERVEROUTPUT ON;
+DECLARE
+    PRODUCTS_REC PRODUCTS%rowtype;
+BEGIN
+    PRODUCTS_REC.PRODUCT_ID := &vprod;
+    SELECT * INTO PRODUCTS_REC FROM PRODUCTS WHERE PRODUCT_ID = PRODUCTS_REC.PRODUCT_ID;
+    dbms_output.put_line(PRODUCTS_REC.PRODUCT_ID);
+    dbms_output.put_line(PRODUCTS_REC.PRODUCT_NAME);
+    dbms_output.put_line(PRODUCTS_REC.DESCRIPTION);
+    dbms_output.put_line(PRODUCTS_REC.STANDARD_COST);
+    dbms_output.put_line(PRODUCTS_REC.LIST_PRICE);
+    dbms_output.put_line(PRODUCTS_REC.CATEGORY_ID);
+END;
+
+
+/*  8eme question  */
+
+SET SERVEROUTPUT ON;
+DECLARE
+    TYPE empinfo
+    IS
+    RECORD(
+        employee_id employees.employee_id%type,
+        first_name employees.first_name%type,
+        last_name employees.last_name%type,
+        email employees.email%type,
+        phone employees.phone%type,
+        hire_date employees.hire_date%type
+    );
+    TYPE managinfo
+    IS
+    RECORD(
+        manager_id employees.manager_id%type,
+        job_title employees.job_title%type
+    );
+    r_emp empinfo;
+    r_mgr managinfo;
+
+BEGIN
+r_emp.employee_id := &vid;
+SELECT  first_name INTO r_emp.first_name FROM employees WHERE employee_id = r_emp.employee_id;
+SELECT  last_name INTO r_emp.last_name FROM employees WHERE employee_id = r_emp.employee_id;
+SELECT  email INTO r_emp.email FROM employees WHERE employee_id = r_emp.employee_id;
+SELECT  phone INTO r_emp.phone FROM employees WHERE employee_id = r_emp.employee_id;
+SELECT  hire_date INTO r_emp.hire_date FROM employees WHERE employee_id = r_emp.employee_id;
+SELECT  manager_id INTO r_mgr.manager_id FROM employees WHERE employee_id = r_emp.employee_id;
+SELECT  job_title INTO r_mgr.job_title FROM employees WHERE employee_id = r_emp.employee_id;
+dbms_output.put_line('Les informations de l employe : ID : ' ||  r_emp.employee_id || ' Name : ' || r_emp.last_name || '   ' || r_emp.first_name);
+dbms_output.put_line(' Email : ' || r_emp.email || ' Phone : ' || r_emp.phone || ' Hire Date : ' || r_emp.hire_date);
+dbms_output.put_line('Les informations du manager : Manager ID : ' || r_mgr.manager_id || ' Job Title : ' || r_mgr.job_title);
+END;
+
+
+--------------------------
+
+
+
